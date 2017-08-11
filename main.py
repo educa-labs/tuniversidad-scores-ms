@@ -32,14 +32,16 @@ def get_predicition():
         db = DB()
         essays_dict = db.get_essays(data["uid"], data["subject_id"])
         prediction = get_best(essays_dict["days"], essays_dict["scores"])
+        # Variables de Retorno
         result = prediction
-        db.conn.close()
+        status = 200
 
+        db.conn.close()
 
     elif request.method == "PUT":
         result = 'PUT request is not allowed'
 
-    resp = Response(json.dumps(result), status=200, mimetype='application/json')
+    resp = Response(json.dumps(result), status=status, mimetype='application/json')
     return resp
 
 
