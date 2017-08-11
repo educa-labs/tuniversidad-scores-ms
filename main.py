@@ -1,31 +1,44 @@
+# Flask Libs
 from flask import Flask
 from flask import request
 from flask import Response, send_from_directory, render_template, request
-# from db import DB
+from flask_cors import CORS, cross_origin
+# System libs
 import json
+import datetime
+# Mainlib
+from score_regressor import get_best
 
 app = Flask(__name__)
-
+CORS(app)
 
 @app.route("/get_prediction", methods = ["GET", "POST", "PUT"])
 def get_predicition():
     # Para evitar problemas con Chrome
     resp.headers['Access-Control-Allow-Origin'] = '*'
-
-    # Diccionario de data que viene en el request
-    data = request.get_json(force=True)
+    # Data viene en formato json -> {}
+    # {uid}
 
     if request.method == "GET":
-        result = 'post'
+        result = 'GET request is not allowed'
 
     elif request.method == "POST":
-        result = 'post'
+        # Diccionario de data que viene en el request
+        data = request.get_json(force=True)
+        token = request.headers["authorization"]
+        # Verificar autenticacion
+
+        # Instancia de base de datos
+        db = DB()
+        essays_dict = db.get_essays(data["uid"], data["subject_id"])
+        prediction = get_best(essays_dict["days"], essays_dict["scores"])
+        result = prediction
+        db.conn.close()
+
 
     elif request.method == "PUT":
-        result = 'put'
-    
+        result = 'PUT request is not allowed'
 
-    # result debe venir como diccionario de python (objeto json)
     resp = Response(json.dumps(result), status=200, mimetype='application/json')
     return resp
 
@@ -33,6 +46,7 @@ def get_predicition():
 @app.errorhandler(404)
 def page_not_found(e):
     return "Nice try motherfucker"
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
