@@ -5,7 +5,7 @@ Para ver ejemplos del funcionamiento ver lineas 105 a 120 de score_regressor.py
 Tips: X debería ser un arreglo de ints en que 0 representa la fecha del primer ensayo y n representa n diás pasados 
 a partir de eso e y un arreglo de puntajes.
 
-##Clases
+## Clases
 
 ```python
 class BayesianRegressor
@@ -14,7 +14,7 @@ class BayesianRegressor
 Esta clase es un wrapper de la clase BayesianRidgeRegressor de sklearn. Permite obtener un modelo de regresión de la
  forma Y = AX+B.
  
-###Métodos
+#### Métodos
 
 ```python
 __init__(self,X,y)
@@ -94,12 +94,13 @@ print_stats(self, t, y_query)
 printea estadísticas del modelo y sobre la consulta de y_query en el punto t (array).
 
 
-## Atributos
+#### Atributos
 
 * `X` datos X pasados inicialmente
 * `y` datos y pasados inicialmente
 * `model` objeto BayessianRidgeRegression de sklearn
 * `train` datos de entrenamiento de la regresion. Distinto de `x`
+
 
 
 ```python
