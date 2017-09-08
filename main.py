@@ -25,18 +25,17 @@ def get_predicition():
     elif request.method == "POST":
         # Diccionario de data que viene en el request
         data = request.get_json(force=True)
-        token = request.headers["authorization"]
+        #token = request.headers["authorization"]
         # Verificar autenticacion
-
         # Instancia de base de datos
-        db = DB()
-        essays_dict = db.get_essays(data["uid"], data["subject_id"])
-        prediction = get_best(essays_dict["days"], essays_dict["scores"])
+        #db = DB()
+
+        prediction = get_best(data["dates"], data["scores"])
         # Variables de Retorno
         result = prediction
         status = 200
 
-        db.conn.close()
+        #db.conn.close()
 
     elif request.method == "PUT":
         result = 'PUT request is not allowed'
