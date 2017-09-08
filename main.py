@@ -5,7 +5,8 @@ from flask import Response, send_from_directory, render_template, request
 from flask_cors import CORS, cross_origin
 # System libs
 import json
-import datetime
+import numpy as np
+
 # Mainlib
 from score_regressor import get_best
 
@@ -15,7 +16,7 @@ CORS(app)
 @app.route("/get_prediction", methods = ["GET", "POST", "PUT"])
 def get_predicition():
     # Para evitar problemas con Chrome
-    resp.headers['Access-Control-Allow-Origin'] = '*'
+    #resp.headers['Access-Control-Allow-Origin'] = '*'
     # Data viene en formato json -> {}
     # {uid}
 
@@ -30,11 +31,14 @@ def get_predicition():
         # Instancia de base de datos
         #db = DB()
 
-        prediction = get_best(data["dates"], data["scores"])
+        prediction_model = get_best(np.array(data["days"]), np.array(data["scores"]))
         # Variables de Retorno
-        result = prediction
-        status = 200
-
+        if prediction_model is not None:
+            result = {"probability":1 - prediction_model.posterior_cdf(data["query_score"], np.array([data["query_day"], ])),"r_score":prediction_model.score()}
+            status = 200
+        else:
+            result ={"r_score":prediction_model.score()}
+            status = 422
         #db.conn.close()
 
     elif request.method == "PUT":

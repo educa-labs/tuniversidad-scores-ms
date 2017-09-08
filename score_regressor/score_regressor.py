@@ -52,7 +52,7 @@ class BayesianRegressor:
 
     # computes estimator for the posterior mean
     def posterior_mean(self, x):
-        return self.model.predict(res.transform(x)[0].reshape(1, -1))[0]
+        return self.model.predict(self.transform(x)[0].reshape(1, -1))[0]
 
     # return tuple of (posterior_mean,sqrt(posterior_variance))
     def posterior_distribution(self, x):
@@ -95,7 +95,7 @@ def get_best(X, y):
     for m in models:
         r = m(X, y)
         r.fit()
-        if r.score() > 0.5 and np.all(r.model.coef_ >= 0):
+        if np.all(r.model.coef_ >= 0):
             trained_models.append(r)
     return max(trained_models, key=lambda x: x.score()) if trained_models != [] else None
 
