@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.linear_model import BayesianRidge
 from scipy.stats import norm
@@ -102,6 +101,7 @@ def get_best(X, y):
 
 
 if __name__ == '__main__':
+    import pandas as pd
     # Model testing
     data = pd.read_csv('tests/convergence.csv')
     y = data['score']

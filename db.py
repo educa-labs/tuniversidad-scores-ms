@@ -41,7 +41,7 @@ class DB():
 
 if __name__ == "__main__":
     db = DB()
-    essays_dict = db.get_essays(db.get_id_by_email("felipe@educalabs.cl"), 2)
+    essays_dict = db.get_essays(db.get_id_by_email("cadizv.in@gmail.com"), 2)
     print(essays_dict)
     prediction = get_best(essays_dict["days"], essays_dict["scores"])
     print(prediction)
