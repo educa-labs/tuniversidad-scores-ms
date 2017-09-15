@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.linear_model import BayesianRidge
 from scipy.stats import norm
 import os
@@ -24,6 +23,7 @@ class BayesianRegressor:
         return self.model.score(self.train, self.y)
 
     def plot(self, file=None):
+        import matplotlib.pyplot as plt
         if file is not None:
             plt.ioff()
         else:
@@ -101,6 +101,7 @@ def get_best(X, y):
 
 
 if __name__ == '__main__':
+    import matplotlib.pyplot as plt
     import pandas as pd
     # Model testing
     data = pd.read_csv('tests/convergence.csv')
