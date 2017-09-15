@@ -36,5 +36,8 @@ Response:
     "r_score": float
 }
 ```
+Dónde:
 
-
+* `probability` probabilidad de que se obtenga `query_score` en `query_day`.
+* `prediction` media estimada de la distribución normal del puntaje en `query_day`
+* `r_score` valor R^2 de la regresión. Si el valor es bajo resultado debería ignorarse. (ups)
