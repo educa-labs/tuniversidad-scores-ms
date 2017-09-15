@@ -41,3 +41,14 @@ Dónde:
 * `probability` probabilidad de que se obtenga `query_score` en `query_day`.
 * `prediction` media estimada de la distribución normal del puntaje en `query_day`
 * `r_score` valor R^2 de la regresión. Si el valor es bajo resultado debería ignorarse. (ups)
+
+
+##Deploy
+
+Para hacer deploy seguir la [guía de don felipe](https://www.guia.educalabs.cl/frameworks/flask.html) y hacer
+`pip install -r requirements.txt` en el virtualenv. 
+
+Para actualizar hacer ssh a la máquina, pullear el repo y hacer 
+```bash
+sudo service tuniversidad-scores-ms restart
+``` 
