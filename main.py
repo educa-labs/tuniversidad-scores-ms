@@ -34,7 +34,7 @@ def get_predicition():
         prediction_model = get_best(np.array(data["days"]), np.array(data["scores"]))
         # Variables de Retorno
         if prediction_model is not None:
-            result = {"probability":1 - prediction_model.posterior_cdf(data["query_score"], np.array([data["query_day"], ])),"r_score":prediction_model.score(), "prediction":prediction_model.posterior_mean(np.array([data["query_day"], ]))}
+            result = {"probability":1 - prediction_model.posterior_cdf(data["query_score"], np.array([data["query_day"], ])),"r_score":prediction_model.score(), "prediction":int(prediction_model.posterior_mean(np.array([data["query_day"], ])))}
             status = 200
         else:
             result ={"r_score":prediction_model.score()}
