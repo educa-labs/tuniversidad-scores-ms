@@ -63,13 +63,32 @@ def get_recommendations():
     #scores deberia ser array de arrays
     scores = np.array(data['scores'])
     recs = sisrec.get_recs(area,scores)
-    result = {"result":{}}
-    for i in range(recs.shape[0]):
-        print(recs[i])
-        result["result"][i] = [int(x) for x in itertools.chain.from_iterable(recs[i])]
-    print(recs)
-    print(result)
+    result = build_dict(recs)
+    # print(recs)
+    # print(result)
     return Response(json.dumps(result), status=200, mimetype='application/json')
+
+@app.route("/get_nn",methods=["POST"])
+def get_nn():
+    data = request.get_json(force=True)
+    careers = np.array(data['carreers'])
+    k = data['k']
+    nns = sisrec.balltree.query(careers,k)
+    result = {'result':{i:[int(x) for x in nns[i]] for i in range(len(careers))}}
+    return Response(json.dumps(result), status=200, mimetype='application/json')
+
+# @app.route("/get_classification",methods=["POST"])
+# def get_classification():
+#
+#     return ""
+
+
+def build_dict(res):
+    result = {"result": {}}
+    for i in range(res.shape[0]):
+        print(res[i])
+        result["result"][i] = [int(x) for x in itertools.chain.from_iterable(res[i])]
+    return result
 
 
 @app.errorhandler(404)
