@@ -6,14 +6,19 @@ from flask_cors import CORS, cross_origin
 # System libs
 import json
 import numpy as np
+import sys
+import itertools
 
 # Mainlib
 from score_regressor import get_best
-from newton.main import *
+from newton import Newton
+from newton.knn import *
 
 app = Flask(__name__)
 CORS(app)
-newton = Newton(np.array([i for i in range(1, 12)]), 'newton/forest/serialized', 'newton/knn/serialized', 'newton/data', 3, 3)
+setattr(sys.modules['__main__'],'gower_distance',gower_distance)
+
+sisrec = Newton(np.array([i for i in range(1, 12)]), 'newton/forest/serialized', 'newton/knn/serialized', 'newton/data', 3, 3)
 
 
 
@@ -55,15 +60,23 @@ def get_predicition():
 def get_recommendations():
     data = request.get_json(force=True)
     area = data['area_id']
-    scores = data['scores']
-
-    return ""
+    #scores deberia ser array de arrays
+    scores = np.array(data['scores'])
+    recs = sisrec.get_recs(area,scores)
+    result = {"result":{}}
+    for i in range(recs.shape[0]):
+        print(recs[i])
+        result["result"][i] = [int(x) for x in itertools.chain.from_iterable(recs[i])]
+    print(recs)
+    print(result)
+    return Response(json.dumps(result), status=200, mimetype='application/json')
 
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return "Nice try motherfucker"
+    return "ups! error:404"
 
 
 if __name__ == "__main__":
+
     app.run(host="0.0.0.0")
