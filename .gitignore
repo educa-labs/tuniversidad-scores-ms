@@ -1,3 +1,9 @@
 .idea/*
 *.pyc
 pyenv/*
+.idea
+*.iml
+newton/forest/serialized/*
+newton/knn/serialized/*
+data/*
+newton/data/*

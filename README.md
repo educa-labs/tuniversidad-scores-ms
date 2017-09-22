@@ -1,6 +1,9 @@
-# score_regressor service
-Este es un micro servicio destinado a la predicción de los puntajes de los estudiantes basado en un modelo de regresión 
+# Newton service
+Este es un micro servicio destinado a proveer de todo lo relacionado a Newton:
+ * La predicción de los puntajes de los estudiantes basado en un modelo de regresión 
 lineal bayesiana con ajuste a una función de bajo crecimiento (raiz,logaritmo).
+
+ * Sistema recomendador de carreras basado en los puntajes de los usuarios.
 
 El sistema consiste en un paquete de cálculo y una pequeña aplicación flask.
 
@@ -8,9 +11,14 @@ El sistema consiste en un paquete de cálculo y una pequeña aplicación flask.
 Paquete python que hace uso de la clase `BayessianRidge` de sklearn. [Docs](https://github.com/educa-labs/tuniversidad-scores-ms/blob/master/score_regressor/README.md)
 
 
+## newton
+Paquete python que contiene el sistema recomendador.
+
 ## App flask.
 
-App está en el archivo `main.py` y solo posee una sola ruta. `POST /get_prediction`.
+App está en el archivo `main.py`. Posee las siguientes rutas:
+
+* `POST /get_prediction`.
 
 Body:
 ```json

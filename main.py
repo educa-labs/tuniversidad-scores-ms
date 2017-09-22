@@ -9,9 +9,13 @@ import numpy as np
 
 # Mainlib
 from score_regressor import get_best
+from newton.main import *
 
 app = Flask(__name__)
 CORS(app)
+newton = Newton(np.array([i for i in range(1, 12)]), 'newton/forest/serialized', 'newton/knn/serialized', 'newton/data', 3, 3)
+
+
 
 @app.route("/get_prediction", methods = ["GET", "POST", "PUT"])
 def get_predicition():
@@ -46,6 +50,14 @@ def get_predicition():
 
     resp = Response(json.dumps(result), status=status, mimetype='application/json')
     return resp
+
+@app.route("/get_recommendations",methods=["POST"])
+def get_recommendations():
+    data = request.get_json(force=True)
+    area = data['area_id']
+    scores = data['scores']
+
+    return ""
 
 
 @app.errorhandler(404)
