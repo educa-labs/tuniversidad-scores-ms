@@ -13,6 +13,7 @@ import itertools
 from score_regressor import get_best
 from newton import Newton
 from newton.knn import *
+from newton.forest import *
 
 app = Flask(__name__)
 CORS(app)
@@ -77,10 +78,19 @@ def get_nn():
     result = {'result':{i:[int(x) for x in nns[i]] for i in range(len(careers))}}
     return Response(json.dumps(result), status=200, mimetype='application/json')
 
-# @app.route("/get_classification",methods=["POST"])
-# def get_classification():
-#
-#     return ""
+@app.route("/get_classification",methods=["POST"])
+def get_classification():
+    data = request.get_json(force=True)
+    area_id = data['area_id']
+    n_results = data['n_results']
+    # scores deberia ser array de arrays
+    scores = np.array(data['scores'])
+    if sisrec.active_forests[area_id] is None:
+        sisrec.active_forests[area_id] = Forest(area_id, sisrec.serialized_forests)
+    forest = sisrec.active_forests[area_id]
+    classifications = forest.get_class(forest.query(scores,n_results))
+    result = {'result':{i:[int(x) for x in classifications[i]] for i in range(len(scores))}}
+    return Response(json.dumps(result), status=200, mimetype='application/json')
 
 
 def build_dict(res):
@@ -93,7 +103,7 @@ def build_dict(res):
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return "ups! error:404"
+    return "ups! error 404"
 
 
 if __name__ == "__main__":
