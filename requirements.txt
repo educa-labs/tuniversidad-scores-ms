@@ -5,9 +5,11 @@ Flask-Cors==3.0.3
 gunicorn==19.7.1
 itsdangerous==0.24
 Jinja2==2.9.6
+lru-dict==1.1.6
 MarkupSafe==1.0
 matplotlib==2.0.2
 numpy==1.13.1
+pandas==0.20.3
 psycopg2==2.7.3.1
 pyparsing==2.2.0
 python-dateutil==2.6.1
@@ -17,4 +19,3 @@ scipy==0.18.1
 six==1.10.0
 sklearn==0.0
 Werkzeug==0.12.2
-pandas==0.20.3

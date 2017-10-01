@@ -19,8 +19,8 @@ app = Flask(__name__)
 CORS(app)
 setattr(sys.modules['__main__'],'gower_distance',gower_distance)
 
-sisrec = Newton(np.array([i for i in range(1, 12)]), 'newton/forest/serialized', 'newton/knn/serialized', 'newton/data', 3, 3)
-
+MODEL_CACHE = 5
+sisrec = Newton(np.array([i for i in range(1, 12)]), 'newton/forest/serialized', 'newton/knn/serialized', 'newton/data', MODEL_CACHE, 4, 5)
 
 
 @app.route("/get_prediction", methods = ["GET", "POST", "PUT"])
@@ -61,6 +61,8 @@ def get_predicition():
 def get_recommendations():
     data = request.get_json(force=True)
     area = data['area_id']
+    if area == 11:
+        return Response(json.dumps({"errors":"not available yet"}), status=501, mimetype='application/json')
     #scores deberia ser array de arrays
     scores = np.array(data['scores'])
     recs = sisrec.get_recs(area,scores)
@@ -83,20 +85,19 @@ def get_classification():
     data = request.get_json(force=True)
     area_id = data['area_id']
     n_results = data['n_results']
+    if area_id == 11:
+        return Response(json.dumps({"errors":"not available yet"}), status=501, mimetype='application/json')
     # scores deberia ser array de arrays
     scores = np.array(data['scores'])
-    if sisrec.active_forests[area_id] is None:
-        sisrec.active_forests[area_id] = Forest(area_id, sisrec.serialized_forests)
-    forest = sisrec.active_forests[area_id]
-    classifications = forest.get_class(forest.query(scores,n_results))
-    result = {'result':{i:[int(x) for x in classifications[i]] for i in range(len(scores))}}
+    classifications = sisrec.predict(area_id, scores ,n_results)
+    result = {'result': {i : [int(x) for x in classifications[i]] for i in range(len(scores))}}
     return Response(json.dumps(result), status=200, mimetype='application/json')
 
 
 def build_dict(res):
     result = {"result": {}}
     for i in range(res.shape[0]):
-        print(res[i])
+        #print(res[i])
         result["result"][i] = [int(x) for x in itertools.chain.from_iterable(res[i])]
     return result
 
