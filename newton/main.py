@@ -49,7 +49,7 @@ class Newton:
             self.active_forests[area_id] = Forest(area_id, self.serialized_forests)
             #print(get_mem_percentage())
         forest = self.active_forests[area_id]
-        print(self.active_forests.items())
+        #print(self.active_forests.items())
         return forest.get_class(forest.query(scores,n_results))
 
     def filter_recs(self, user, carreers):
