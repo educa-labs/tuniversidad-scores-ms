@@ -6,7 +6,7 @@ from newton.forest import *
 from newton.knn import *
 import numpy as np
 from lru import LRU
-
+from psutil import virtual_memory
 
 class Newton:
 
@@ -43,13 +43,19 @@ class Newton:
 
     def predict(self, area_id, scores, n_results):
         if not self.active_forests.has_key(area_id):
+            if get_mem_percentage() > 0.7:
+                del self.active_forests[self.active_forests.peek_last_item()[0]]
             self.active_forests[area_id] = Forest(area_id, self.serialized_forests)
+            #print(get_mem_percentage())
         forest = self.active_forests[area_id]
         return forest.get_class(forest.query(scores,n_results))
 
     def filter_recs(self, user, carreers):
         pass
 
+def get_mem_percentage():
+    mem = virtual_memory()
+    return mem.available/mem.total
 
 if __name__ == '__main__':
     #Ejemplo de uso
