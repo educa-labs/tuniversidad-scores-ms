@@ -22,7 +22,7 @@ class Newton:
     def __init__(self, area_ids,serialized_forests,serialized_tree, data_dir, cache=4,n_forest_results=3, k=5):
         self.area_ids = area_ids
         self.balltree = Tree(serialized_tree,data_dir)
-        self.active_forests = LRU(cache)
+        self.active_forests = LRU(cache,callback=clear)
         self.n_forest_results = n_forest_results
         self.k = k
         self.serialized_forests = serialized_forests
@@ -42,12 +42,14 @@ class Newton:
         return np.array(recommendations)
 
     def predict(self, area_id, scores, n_results):
+
         if not self.active_forests.has_key(area_id):
             if get_mem_percentage() > 0.7:
                 del self.active_forests[self.active_forests.peek_last_item()[0]]
             self.active_forests[area_id] = Forest(area_id, self.serialized_forests)
             #print(get_mem_percentage())
         forest = self.active_forests[area_id]
+        print(self.active_forests.items())
         return forest.get_class(forest.query(scores,n_results))
 
     def filter_recs(self, user, carreers):
@@ -56,6 +58,9 @@ class Newton:
 def get_mem_percentage():
     mem = virtual_memory()
     return mem.available/mem.total
+
+def clear(key,value):
+    del value
 
 if __name__ == '__main__':
     #Ejemplo de uso
