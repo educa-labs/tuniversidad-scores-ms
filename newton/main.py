@@ -42,9 +42,8 @@ class Newton:
         return np.array(recommendations)
 
     def predict(self, area_id, scores, n_results):
-
         if not self.active_forests.has_key(area_id):
-            if get_mem_percentage() > 0.7:
+            if get_mem_percentage() < 0.3:
                 del self.active_forests[self.active_forests.peek_last_item()[0]]
             self.active_forests[area_id] = Forest(area_id, self.serialized_forests)
             #print(get_mem_percentage())
