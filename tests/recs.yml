@@ -1,0 +1,15 @@
+config:
+  target: 'http://newton.tuniversidad.cl'
+  phases:
+    - duration: 60
+      arrivalCount: 20
+  defaults:
+    headers:
+      Content-Type: 'application/json'
+scenarios:
+  - flow:
+    - post:
+        url: '/get_recommendations'
+        json:
+          area_id: 1
+          scores: [[800, 700, 0, 700, 720],[730, 750, 600, 660, 719],[560, 550, 0, 600, 620],[450, 450, 0, 0, 650]]
