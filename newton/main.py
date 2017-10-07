@@ -6,7 +6,8 @@ from newton.knn import *
 import numpy as np
 from lru import LRU
 from psutil import virtual_memory
-
+from threading import Lock
+from time import sleep
 
 class Newton:
     '''
@@ -21,11 +22,13 @@ class Newton:
     def __init__(self, area_ids, serialized_forests, serialized_tree, data_dir, cache=4, n_forest_results=3, k=5):
         self.area_ids = area_ids
         self.balltree = Tree(serialized_tree, data_dir)
-        self.active_forests = LRU(cache, callback=clear)
         self.n_forest_results = n_forest_results
         self.k = k
         self.serialized_forests = serialized_forests
         self.cache = cache
+        self.locks = {i: Lock() for i in area_ids}
+        self.counters = {i: 0 for i in area_ids}
+        self.active_forests = LRU(cache, callback=lambda key, value: clear(key, value, self.locks,self.counters))
 
     '''
     area_id - int  id de area para recomendar
@@ -41,13 +44,17 @@ class Newton:
         return np.array(recommendations)
 
     def predict(self, area_id, scores, n_results):
+        with self.locks[area_id]:
+            self.counters[area_id] += 1
         if not self.active_forests.has_key(area_id):
             if get_mem_percentage() < 0.3:
-                del self.active_forests[self.active_forests.peek_last_item()[0]]
+                clear(self.active_forests.peek_last_item()[0], self.active_forests[self.active_forests.peek_last_item()[0]], self.locks,self.counters)
             self.active_forests[area_id] = Forest(area_id, self.serialized_forests)
             # print(get_mem_percentage())
         forest = self.active_forests[area_id]
         prediction = forest.get_class(forest.query(scores, n_results))
+        with self.locks[area_id]:
+            self.counters[area_id] -= 1
         # print(self.active_forests.items())
         return prediction
 
@@ -60,9 +67,17 @@ def get_mem_percentage():
     return mem.available / mem.total
 
 
-def clear(key, value):
-    del value
-
+def clear(key, value, locks, counters):
+    while True:
+        failed = False
+        with locks[key]:
+            if counters[key] > 0:
+                failed = True
+            else:
+                del value
+                break
+        if failed:
+            sleep(0.5)
 
 if __name__ == '__main__':
     # Ejemplo de uso
