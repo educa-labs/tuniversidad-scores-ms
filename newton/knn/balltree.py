@@ -31,7 +31,7 @@ class Tree:
         self.balltree = joblib.load('{}/balltree'.format(serialized_dir))
         self.data = np.array(pd.read_csv('{}/carreers_scaled.csv'.format(data_dir)))
         self.ids = np.load('{}/ids.npy'.format(data_dir))
-        self.reversed_ids = np.zeros(self.ids.shape, dtype='int32')
+        self.reversed_ids = np.zeros(np.max(self.ids) + 1, dtype='int32')
         for i in range(self.ids.shape[0]):
             self.reversed_ids[self.ids[i]] = i
 
