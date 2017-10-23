@@ -51,7 +51,7 @@ def get_predicition():
                 "prediction": int(prediction_model.posterior_mean(np.array([data["query_day"], ])))}
             status = 200
         else:
-            result = {"r_score": prediction_model.score()}
+            #result = {"r_score": prediction_model.score()}
             status = 422
             # db.conn.close()
 
