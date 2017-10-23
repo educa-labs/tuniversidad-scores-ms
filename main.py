@@ -92,8 +92,8 @@ def get_classification():
     data = request.get_json(force=True)
     area_id = data['area_id']
     n_results = data['n_results']
-    if area_id == 11:
-        return Response(json.dumps({"errors": "not available yet"}), status=501, mimetype='application/json')
+    # if area_id == 11:
+    #     return Response(json.dumps({"errors": "not available yet"}), status=501, mimetype='application/json')
     # scores deberia ser array de arrays
     scores = np.array(data['scores'])
     classifications = sisrec.predict(area_id, scores, n_results)
