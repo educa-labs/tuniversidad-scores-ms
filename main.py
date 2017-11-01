@@ -66,8 +66,8 @@ def get_predicition():
 def get_recommendations():
     data = request.get_json(force=True)
     area = data['area_id']
-    if area == 11:
-        return Response(json.dumps({"errors": "not available yet"}), status=501, mimetype='application/json')
+    # if area == 11:
+    #     return Response(json.dumps({"errors": "not available yet"}), status=501, mimetype='application/json')
     # scores deberia ser array de arrays
     scores = np.array(data['scores'])
     recs = sisrec.get_recs(area, scores)
